@@ -3,611 +3,729 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Team-Regelwerk – FiveM Server</title>
+<title>Team-Regelwerk · Lagoona City</title>
+<link rel="preload" as="image" href="lagoona-city-rp-background.png" fetchpriority="high">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,600;1,8..60,600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-  body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #0b1120;
-    color: #e2e8f0;
-    min-height: 100vh;
-  }
+:root{
+  --ink:#e8eef7;
+  --muted:#94a8c4;
+  --muted2:#6b829e;
+  --accent:#38bdf8;
+  --accent-strong:#2563eb;
+  --accent-soft:#60a5fa;
+  --accent-glow:rgba(56,189,248,.42);
+  --danger:#f87171;
+  --warn:#fbbf24;
+  --ok:#4ade80;
+  --info:#93c5fd;
+  --header-h:58px;
+  --font-sans:"Outfit",system-ui,sans-serif;
+  --font-serif:"Source Serif 4",Georgia,serif;
+  --radius:14px;
+  --glass:rgba(15,25,46,.48);
+  --glass-card:rgba(12,34,62,.42);
+  --stroke:rgba(96,165,250,.25);
+  --hairline:rgba(59,130,246,.28);
+  --scroll-track:rgba(11,26,52,.94);
+  --scroll-thumb:rgba(56,189,248,.52);
+  --scroll-thumb-hover:rgba(96,165,250,.75);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{
+  scroll-behavior:smooth;
+  color-scheme:dark;
+  height:100%;
+  background:#050a14;
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto;}
+}
+body{
+  font-family:var(--font-sans);
+  font-size:1.0625rem;
+  line-height:1.62;
+  color:var(--ink);
+  min-height:100%;
+  height:100%;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  background:#050a14;
+}
 
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    background: rgba(11,17,32,0.92);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.07);
-    padding: 0 2rem;
-    display: flex; align-items: center; gap: 1rem; height: 56px;
-  }
-  .nav-logo {
-    font-size: 15px; font-weight: 600; color: #fff;
-    display: flex; align-items: center; gap: 8px; text-decoration: none;
-    margin-right: auto;
-  }
-  .nav-logo span {
-    width: 28px; height: 28px; background: #1a56db; border-radius: 6px;
-    display: flex; align-items: center; justify-content: center; font-size: 14px;
-  }
-  .nav-links { display: flex; gap: 0.25rem; }
-  .nav-links a {
-    font-size: 13px; color: rgba(255,255,255,0.5); text-decoration: none;
-    padding: 5px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s;
-    white-space: nowrap;
-  }
-  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.07); }
+/* RP-Hintergrund: echtes Bild (zuverlässiger als CSS url auf manchen Setups) */
+.rp-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  overflow:hidden;
+  pointer-events:none;
+  background:#050a14;
+}
+.rp-backdrop img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  display:block;
+}
+.rp-backdrop::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    linear-gradient(168deg,rgba(4,10,22,.38) 0%,rgba(5,14,32,.28) 40%,rgba(4,11,26,.45) 100%),
+    radial-gradient(900px 480px at 50% -6%,rgba(15,56,112,.18),transparent 58%),
+    radial-gradient(800px 400px at 106% 88%,rgba(67,56,202,.12),transparent 52%);
+}
 
-  /* HERO */
-  .hero {
-    padding: 120px 2rem 80px;
-    text-align: center;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26,86,219,0.18) 0%, transparent 70%);
-    position: relative; overflow: hidden;
-  }
-  .hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%231a56db' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    pointer-events: none;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(26,86,219,0.15); border: 1px solid rgba(26,86,219,0.3);
-    border-radius: 20px; padding: 5px 14px; font-size: 12px; color: #93c5fd;
-    margin-bottom: 1.5rem; letter-spacing: 0.03em;
-  }
-  .hero h1 {
-    font-size: clamp(32px, 5vw, 52px); font-weight: 700;
-    color: #fff; line-height: 1.15; margin-bottom: 1rem;
-    letter-spacing: -0.02em;
-  }
-  .hero h1 em { font-style: normal; color: #3b82f6; }
-  .hero p {
-    font-size: 17px; color: rgba(255,255,255,0.5);
-    max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.7;
-  }
-  .hero-stats {
-    display: inline-flex; gap: 2rem; background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 1rem 2rem;
-  }
-  .hero-stat { text-align: center; }
-  .hero-stat .val { font-size: 22px; font-weight: 700; color: #fff; display: block; }
-  .hero-stat .lbl { font-size: 12px; color: rgba(255,255,255,0.4); }
+.sr-only{
+  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}
 
-  /* LAYOUT */
-  .layout {
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    max-width: 1100px; margin: 0 auto;
-    padding: 3rem 2rem 6rem; gap: 3rem;
-  }
+/* Header */
+.site-header{
+  position:fixed;top:0;left:0;right:0;z-index:300;
+  height:var(--header-h);
+  display:flex;align-items:center;gap:.5rem;
+  padding:0 1rem 0 1.25rem;
+  background:rgba(7,13,26,.82);
+  backdrop-filter:saturate(140%) blur(18px);
+  -webkit-backdrop-filter:saturate(140%) blur(18px);
+  border-bottom:1px solid rgba(59,130,246,.25);
+  box-shadow:0 4px 28px -6px rgba(0,0,0,.55);
+}
+.brand{
+  font-weight:700;font-size:.97rem;color:var(--ink);
+  text-decoration:none;
+  letter-spacing:-0.025em;
+}
+.brand:hover{color:var(--accent-soft);}
+.sep{color:var(--muted);font-weight:400;opacity:.85;}
+.doc-name{font-size:.9rem;color:var(--muted);font-weight:500;}
 
-  /* SIDEBAR */
-  .sidebar { position: sticky; top: 76px; height: fit-content; }
-  .sidebar-title { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem; }
-  .sidebar nav { display: flex; flex-direction: column; gap: 2px; }
-  .sidebar nav a {
-    font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none;
-    padding: 6px 10px; border-radius: 6px; transition: color 0.15s, background 0.15s;
-    display: flex; align-items: center; gap: 8px; border-left: 2px solid transparent;
-  }
-  .sidebar nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
-  .sidebar nav a.active { color: #3b82f6; background: rgba(59,130,246,0.1); border-left-color: #3b82f6; }
-  .sidebar nav a .num { font-size: 10px; opacity: 0.5; min-width: 14px; }
+/* Seiten-Scroll — ersetzt die Browser-Leiste (eigene Scrollbar) */
+.page-scroll{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+  height:100vh;
+  padding-top:var(--header-h);
+  box-sizing:border-box;
+  overflow-y:auto;
+  overflow-x:hidden;
+  background:transparent;
+  scrollbar-gutter:stable;
+  scrollbar-width:thin;
+  scrollbar-color:var(--scroll-thumb) var(--scroll-track);
+}
+.page-scroll::-webkit-scrollbar{width:11px;}
+.page-scroll::-webkit-scrollbar-track{
+  background:var(--scroll-track);
+  border-radius:999px;
+  margin:8px 0 10px;
+  border-left:1px solid rgba(59,130,246,.14);
+}
+.page-scroll::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,var(--accent-soft),var(--accent-strong));
+  border-radius:999px;
+  border:2px solid var(--scroll-track);
+  box-shadow:0 0 12px rgba(56,189,248,.35);
+}
+.page-scroll::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#7dd3fc,var(--accent));}
 
-  /* CONTENT */
-  .content { min-width: 0; }
+/* Innenrahmen — volle Viewportbreite, streckt mit dem Scrollbereich */
+.shell{
+  flex:1 0 auto;
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0;
+  min-height:calc(100vh - var(--header-h));
+}
 
-  /* SECTION */
-  .section {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.07);
-    border-radius: 16px; margin-bottom: 1.5rem; overflow: hidden;
-  }
-  .section-header {
-    display: flex; align-items: center; gap: 12px;
-    padding: 1.25rem 1.5rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    background: rgba(255,255,255,0.02);
-  }
-  .section-num {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: rgba(26,86,219,0.2); border: 1px solid rgba(26,86,219,0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 13px; font-weight: 600; color: #3b82f6; flex-shrink: 0;
-  }
-  .section-title { font-size: 16px; font-weight: 600; color: #fff; }
-  .section-body { padding: 1.5rem; }
+/* Drei-Spalten-Raster für Regelbereiche */
+.rules-columns{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:clamp(.85rem,1.5vw,1.25rem);
+  align-items:stretch;
+}
+.rules-col{display:flex;flex-direction:column;min-width:0;}
+.rules-col section.region:last-child{margin-bottom:0;}
+@media(max-width:1100px){
+  .rules-columns{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:700px){
+  .rules-columns{grid-template-columns:1fr;}
+}
 
-  .subsection { margin-bottom: 1.5rem; }
-  .subsection:last-child { margin-bottom: 0; }
-  .subsection-title {
-    font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3);
-    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 0.75rem;
-  }
+/* Main — volles Feld unter der Navbar */
+main{
+  display:flex;
+  flex-direction:column;
+  flex:1;
+  min-height:0;
+  padding:clamp(1rem,2.2vw,1.65rem) clamp(.85rem,2.8vw,1.75rem) clamp(1rem,2.8vw,1.65rem);
+  margin:0;
+  background:var(--glass-card);
+  backdrop-filter:saturate(150%) blur(18px);
+  -webkit-backdrop-filter:saturate(150%) blur(18px);
+  border:none;
+  border-top:1px solid rgba(147,197,253,.28);
+  border-radius:0;
+  box-shadow:
+    0 1px 0 rgba(148,218,255,.08) inset,
+    0 24px 48px -22px rgba(0,12,34,.92);
+}
+@media(max-width:700px){
+  main{padding-inline:clamp(.65rem,3vw,.9rem);}
+}
+.intro{
+  margin-bottom:1.2rem;padding-bottom:1rem;
+  border-bottom:1px solid var(--hairline);
+  scroll-margin-top:calc(var(--header-h) + 16px);
+}
+.kicker{
+  display:inline-flex;align-items:center;gap:.45rem;
+  font-size:.8rem;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;
+  color:#bae6fd;
+  margin-bottom:.7rem;
+  padding:.35rem .7rem;border-radius:999px;
+  background:rgba(59,130,246,.28);
+  border:1px solid rgba(147,197,253,.42);
+}
+.intro h1{
+  font-family:var(--font-serif);
+  font-size:clamp(1.75rem,3.8vw,2.45rem);
+  font-weight:600;line-height:1.13;
+  letter-spacing:-0.022em;color:var(--ink);
+  margin-bottom:0;
+  background:linear-gradient(120deg,#f8fafc 0%,#7dd3fc 45%,#38bdf8 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+@supports not (background-clip:text){
+  .intro h1{background:none;-webkit-text-fill-color:unset;color:var(--ink);}
+}
 
-  .rule-list { display: flex; flex-direction: column; gap: 8px; }
-  .rule-item {
-    display: flex; align-items: flex-start; gap: 10px;
-    font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.6;
-    padding: 8px 12px; border-radius: 8px;
-    background: rgba(255,255,255,0.02);
-  }
-  .rule-item .icon { width: 18px; height: 18px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
-  .rule-item.ok .icon { background: rgba(34,197,94,0.15); color: #4ade80; }
-  .rule-item.no .icon { background: rgba(239,68,68,0.15); color: #f87171; }
-  .rule-item.warn .icon { background: rgba(251,191,36,0.15); color: #fbbf24; }
-  .rule-item.info .icon { background: rgba(59,130,246,0.15); color: #60a5fa; }
+/* Sections */
+section.region{
+  scroll-margin-top:calc(var(--header-h) + 12px);
+  margin-bottom:1.15rem;
+}
+.region h2{
+  font-family:var(--font-serif);
+  font-size:clamp(1.2rem,1.85vw,1.45rem);font-weight:600;
+  color:var(--ink);
+  margin-bottom:.65rem;
+  padding-bottom:.45rem;
+  position:relative;border-bottom:none;
+}
+.region h2::after{
+  content:"";
+  position:absolute;left:0;bottom:0;
+  height:3px;width:min(240px,100%);
+  border-radius:999px;
+  background:linear-gradient(90deg,var(--accent),var(--accent-strong));
+}
 
-  /* RANK TABLE */
-  .rank-table { width: 100%; border-collapse: collapse; }
-  .rank-table tr { border-bottom: 1px solid rgba(255,255,255,0.05); }
-  .rank-table tr:last-child { border-bottom: none; }
-  .rank-table td { padding: 10px 8px; font-size: 14px; }
-  .rank-badge {
-    display: inline-flex; align-items: center;
-    font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 20px;
-    white-space: nowrap;
-  }
-  .rank-gold { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.25); }
-  .rank-blue { background: rgba(59,130,246,0.15); color: #60a5fa; border: 1px solid rgba(59,130,246,0.25); }
-  .rank-green { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
-  .rank-purple { background: rgba(167,139,250,0.15); color: #a78bfa; border: 1px solid rgba(167,139,250,0.25); }
-  .rank-pink { background: rgba(244,114,182,0.15); color: #f472b6; border: 1px solid rgba(244,114,182,0.2); }
-  .rank-gray { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.1); }
-  .rank-desc { color: rgba(255,255,255,0.4); font-size: 13px; }
+/* Disclosure panels — kompakter für Mehrspalten-Layout */
+.panel{
+  background:rgba(13,37,71,.48);
+  border:1px solid rgba(148,209,250,.22);
+  border-radius:12px;
+  margin-bottom:.45rem;
+  box-shadow:0 2px 14px -2px rgba(0,0,0,.4);
+  scroll-margin-top:calc(var(--header-h) + 12px);
+  transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease;
+}
+.panel:not([open]):hover{
+  border-color:rgba(56,189,248,.52);
+  box-shadow:0 10px 28px -8px rgba(37,99,235,.42);
+}
+.panel[open]{
+  border-color:rgba(96,165,250,.5);
+  box-shadow:0 14px 36px -10px rgba(37,99,235,.52);
+}
+.panel summary{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.65rem .85rem;
+  list-style:none;cursor:pointer;user-select:none;
+  font-weight:600;font-size:clamp(.9rem,calc(.95rem + .15vw),.985rem);color:var(--ink);
+  outline:none;border-radius:11px 11px 0 0;
+}
+.panel summary:focus-visible{
+  box-shadow:0 0 0 2px var(--accent-glow);
+}
+.panel summary::-webkit-details-marker{display:none;}
+.panel summary::marker{display:none;}
+.panel summary .num{
+  flex-shrink:0;width:1.65rem;height:1.65rem;
+  display:grid;place-items:center;
+  font-size:.72rem;font-weight:700;
+  background:linear-gradient(145deg,rgba(56,189,248,.35),rgba(37,99,235,.42));
+  color:#e0f2fe;
+  border-radius:8px;
+  border:1px solid rgba(147,197,253,.5);
+}
+.panel summary .panel-title{flex:1;text-align:left;}
+.panel-body{
+  padding:0 .85rem .95rem;
+  border-top:1px solid var(--hairline);
+}
 
-  /* TAGS */
-  .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
-  .tag {
-    font-size: 12px; padding: 4px 12px; border-radius: 20px;
-    background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
-    border: 1px solid rgba(255,255,255,0.09);
-  }
-  .tag.red { background: rgba(239,68,68,0.1); color: #f87171; border-color: rgba(239,68,68,0.2); }
-  .tag.blue { background: rgba(59,130,246,0.1); color: #60a5fa; border-color: rgba(59,130,246,0.2); }
+.rules{display:flex;flex-direction:column;gap:.35rem;}
+.rule{
+  display:flex;align-items:flex-start;gap:.55rem;
+  font-size:clamp(.9rem,calc(.88rem + .2vw),.985rem);line-height:1.55;color:var(--ink);
+  padding:.4rem 0;border-bottom:1px solid rgba(96,165,250,.14);
+}
+.rule:last-child{border-bottom:none;}
+.rule .mark{
+  flex-shrink:0;width:1.2rem;height:1.2rem;border-radius:6px;
+  display:grid;place-items:center;font-size:.62rem;font-weight:800;
+}
+.rule.ok .mark{background:rgba(34,197,94,.22);color:var(--ok);}
+.rule.no .mark{background:rgba(239,68,68,.22);color:var(--danger);}
+.rule.warn .mark{background:rgba(251,191,36,.18);color:var(--warn);}
+.rule.info .mark{background:rgba(59,130,246,.3);color:var(--info);}
 
-  /* PUNISHMENT */
-  .punish-list { display: flex; flex-direction: column; gap: 0; }
-  .punish-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05);
-  }
-  .punish-row:last-child { border-bottom: none; }
-  .punish-step {
-    width: 28px; height: 28px; border-radius: 50%;
-    background: rgba(255,255,255,0.06); font-size: 12px; font-weight: 600;
-    color: rgba(255,255,255,0.4); display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .punish-row.severe .punish-step { background: rgba(239,68,68,0.15); color: #f87171; }
-  .punish-label { font-size: 14px; color: rgba(255,255,255,0.7); }
-  .punish-row.severe .punish-label { color: #f87171; }
+.sub-h{
+  font-size:.75rem;font-weight:700;letter-spacing:.095em;
+  text-transform:uppercase;color:#b4c9e8;
+  margin:.75rem 0 .42rem;line-height:1.35;
+}
+.sub-h:first-child{margin-top:0;}
 
-  /* FOOTER */
-  footer {
-    text-align: center; padding: 3rem 2rem;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.01);
-  }
-  footer p { font-size: 14px; color: rgba(255,255,255,0.3); line-height: 1.7; }
-  footer strong { color: rgba(255,255,255,0.5); font-weight: 500; }
+.tags{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.35rem;}
+.tag{
+  font-size:.8rem;font-weight:500;padding:.32rem .6rem;
+  border-radius:8px;border:1px solid var(--hairline);
+  background:rgba(255,255,255,.08);color:var(--muted2);
+}
+.tag.red{border-color:rgba(248,113,113,.45);color:#fecaca;background:rgba(127,29,29,.45);}
+.tag.blue{border-color:rgba(125,211,252,.4);color:#bfdbfe;background:rgba(30,64,175,.45);}
+.tag.green{border-color:rgba(74,222,128,.4);color:#bbf7d0;background:rgba(21,128,61,.4);}
 
-  /* INFO BOX */
-  .info-box {
-    background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2);
-    border-radius: 10px; padding: 12px 16px; margin-top: 1rem;
-    font-size: 13px; color: #93c5fd; line-height: 1.6;
-  }
+.note{
+  margin-top:.75rem;padding:.65rem .85rem;font-size:.875rem;line-height:1.55;
+  color:#e0f2fe;background:rgba(37,99,235,.32);
+  border:1px solid rgba(125,211,252,.35);border-radius:8px;
+}
 
-  /* DIVIDER */
-  .divider { height: 1px; background: rgba(255,255,255,0.06); margin: 1.25rem 0; }
+.rank-grid{display:grid;gap:0;}
+.rank-line{
+  display:grid;
+  grid-template-columns:minmax(7.25rem,auto) 1fr;
+  gap:.55rem;align-items:center;padding:.48rem 0;
+  border-bottom:1px solid rgba(96,165,250,.14);font-size:.875rem;
+}
+.rank-line:last-child{border-bottom:none;}
+.badge{
+  display:inline-flex;justify-content:center;
+  font-size:.7rem;font-weight:700;letter-spacing:.015em;
+  padding:.26rem .55rem;border-radius:6px;width:fit-content;line-height:1.25;
+}
+.b-gold{background:#fffbeb;color:#a16207;border:1px solid #fde68a;}
+.b-blue{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe;}
+.b-green{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0;}
+.b-purple{background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe;}
+.b-pink{background:#fdf2f8;color:#be185d;border:1px solid #fbcfe8;}
+.b-gray{background:rgba(255,255,255,.06);color:var(--muted2);border:1px solid var(--hairline);}
+.rank-line span:last-child{color:var(--muted);font-size:.84rem;line-height:1.45;}
+@media(max-width:520px){
+  .rank-line{grid-template-columns:1fr;gap:.25rem;}
+}
 
-  /* MOBILE */
-  @media (max-width: 700px) {
-    .layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .nav-links { display: none; }
-    .hero { padding: 90px 1.25rem 60px; }
-    .hero-stats { flex-wrap: wrap; gap: 1rem; padding: 0.75rem 1.25rem; }
-  }
+.steps{display:flex;flex-direction:column;gap:0;}
+.step{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.45rem 0;border-bottom:1px solid rgba(96,165,250,.14);
+  font-size:.875rem;line-height:1.45;
+}
+.step:last-child{border-bottom:none;}
+.step i{
+  width:1.45rem;height:1.45rem;border-radius:50%;
+  display:grid;place-items:center;font-size:.68rem;font-weight:800;
+  background:rgba(15,43,76,.92);border:1px solid var(--hairline);color:#93c5fd;
+  font-style:normal;font-family:inherit;
+}
+.step.bad i{background:rgba(127,29,29,.62);border-color:rgba(248,113,113,.45);color:#fecaca;}
+.step.bad span{color:#fecaca;font-weight:500;}
+
+.rp-grid{
+  display:flex;flex-direction:column;gap:.45rem;
+  margin-top:.2rem;
+}
+.rp-card{
+  border:1px solid rgba(148,209,250,.35);border-radius:10px;
+  padding:.65rem .8rem;background:rgba(10,32,61,.82);
+  font-size:.895rem;line-height:1.5;
+  color:#e2e8f0;
+  box-shadow:0 4px 18px -4px rgba(37,99,235,.42);
+}
+.rp-card strong{display:flex;align-items:center;gap:.4rem;color:var(--danger);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.28rem;}
+
+footer{
+  padding:clamp(.85rem,2vw,1.1rem) clamp(.75rem,3vw,1rem) clamp(1rem,2vw,1.35rem);margin-top:auto;text-align:center;
+  font-size:.9rem;line-height:1.55;color:var(--muted);
+  border:none;
+  border-top:1px solid var(--hairline);
+  background:transparent;
+}
+footer strong{color:var(--ink);font-weight:600;}
 </style>
 </head>
 <body>
 
-<nav>
-  <a class="nav-logo" href="#top">
-    <span>🛡</span>
-    FiveM Team
-  </a>
-  <div class="nav-links">
-    <a href="#verhalten">Verhalten</a>
-    <a href="#schweigen">Verschwiegenheit</a>
-    <a href="#admin">Adminrechte</a>
-    <a href="#struktur">Struktur</a>
-    <a href="#regeln">Konsequenzen</a>
-  </div>
-</nav>
+<div class="rp-backdrop" aria-hidden="true">
+  <!-- gleicher Ordner wie index.html; Fallback assets/ wenn du nur den Unterordner hostest -->
+  <img
+    src="lagoona-city-rp-background.png"
+    alt=""
+    width="1920"
+    height="1080"
+    decoding="async"
+    loading="eager"
+    fetchpriority="high"
+    onerror="this.onerror=null;this.src='assets/lagoona-city-rp-background.png';"
+  >
+</div>
 
-<!-- HERO -->
-<section class="hero" id="top">
-  <div class="hero-badge">🎮 FiveM Roleplay Server</div>
-  <h1>Team-<em>Regelwerk</em></h1>
-  <p>Verbindliche Richtlinien für alle Teammitglieder. Mit dem Beitritt ins Team werden diese Regeln automatisch akzeptiert.</p>
-  <div class="hero-stats">
-    <div class="hero-stat"><span class="val">12</span><span class="lbl">Abschnitte</span></div>
-    <div class="hero-stat"><span class="val">7</span><span class="lbl">Ränge</span></div>
-    <div class="hero-stat"><span class="val">6</span><span class="lbl">Konsequenzstufen</span></div>
-  </div>
-</section>
+<header class="site-header">
+  <a class="brand" href="#top">Lagoona City</a>
+  <span class="sep">/</span>
+  <span class="doc-name">Team-Regelwerk</span>
+</header>
 
-<div class="layout">
-
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-title">Inhaltsverzeichnis</div>
-    <nav>
-      <a href="#allgemein"><span class="num">01</span> Allgemeines</a>
-      <a href="#verhalten"><span class="num">02</span> Verhalten im Team</a>
-      <a href="#schweigen"><span class="num">03</span> Verschwiegenheit</a>
-      <a href="#pflichten"><span class="num">04</span> Rechte &amp; Pflichten</a>
-      <a href="#admin"><span class="num">05</span> Adminrechte</a>
-      <a href="#support"><span class="num">06</span> Support-Regeln</a>
-      <a href="#struktur"><span class="num">07</span> Teamstruktur</a>
-      <a href="#discord"><span class="num">08</span> Discord-Regeln</a>
-      <a href="#regeln"><span class="num">09</span> Konsequenzen</a>
-      <a href="#bewerbung"><span class="num">10</span> Bewerbung &amp; Probezeit</a>
-      <a href="#rp"><span class="num">11</span> Roleplay-Bezug</a>
-    </nav>
-  </aside>
-
-  <!-- CONTENT -->
-  <main class="content">
-
-    <!-- 1 ALLGEMEINES -->
-    <div class="section" id="allgemein">
-      <div class="section-header">
-        <div class="section-num">1</div>
-        <div class="section-title">Allgemeines</div>
-      </div>
-      <div class="section-body">
-        <div class="rule-list">
-          <div class="rule-item info"><div class="icon">ℹ</div> Dieses Regelwerk gilt für alle Teammitglieder des Servers und ist verbindlich einzuhalten.</div>
-          <div class="rule-item info"><div class="icon">ℹ</div> Das Team repräsentiert den Server nach außen und trägt Verantwortung für Ordnung, Fairness und eine angenehme Community.</div>
-          <div class="rule-item info"><div class="icon">ℹ</div> Mit dem Beitritt ins Team akzeptiert jedes Mitglied automatisch dieses Regelwerk.</div>
-        </div>
-      </div>
+<div class="page-scroll">
+<div class="shell">
+  <main>
+    <div class="intro" id="top">
+      <span class="kicker">Lagoona City · Roleplay</span>
+      <h1>Team-Regelwerk</h1>
     </div>
 
-    <!-- 2 VERHALTEN -->
-    <div class="section" id="verhalten">
-      <div class="section-header">
-        <div class="section-num">2</div>
-        <div class="section-title">Verhalten im Team</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">2.1 Respektvoller Umgang</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Jeder behandelt andere Teammitglieder, Spieler und Gäste respektvoll.</div>
-            <div class="rule-item no"><div class="icon">✗</div> Beleidigungen, Diskriminierung, Provokationen oder Mobbing sind verboten.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Diskussionen werden sachlich geführt.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Streitigkeiten werden intern geklärt und nicht öffentlich ausgetragen.</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">2.2 Professionalität</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Teammitglieder verhalten sich jederzeit professionell.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Supportfälle werden ruhig und neutral bearbeitet.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Persönliche Meinungen dürfen Entscheidungen nicht beeinflussen.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Teammitglieder bleiben auch bei Provokationen ruhig.</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">2.3 Vorbildfunktion</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Das Team dient als Vorbild für die Community.</div>
-            <div class="rule-item warn"><div class="icon">!</div> Regelverstöße durch Teammitglieder werden strenger bewertet.</div>
-            <div class="rule-item warn"><div class="icon">!</div> Missbrauch der Teamrolle schadet dem gesamten Server.</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="rules-columns">
+    <div class="rules-col">
+    <section class="region" id="region-grundlagen" aria-labelledby="h-grundlagen">
+      <h2 id="h-grundlagen">Grundlagen</h2>
 
-    <!-- 3 VERSCHWIEGENHEIT -->
-    <div class="section" id="schweigen">
-      <div class="section-header">
-        <div class="section-num">3</div>
-        <div class="section-title">Verschwiegenheitspflicht</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">3.1 Interne Informationen – niemals weitergeben</div>
-          <div class="tag-row">
-            <span class="tag red">Teaminterne Gespräche</span>
-            <span class="tag red">Adminrechte &amp; Systeme</span>
-            <span class="tag red">Geplante Updates</span>
-            <span class="tag red">Beschwerden / Reports</span>
+      <details class="panel" id="s-allgemein">
+        <summary>
+          <span class="num">1</span>
+          <span class="panel-title">Allgemeines<span class="sr-only">, zum Ausklappen klicken</span></span>
+        </summary>
+        <div class="panel-body">
+          <div class="rules">
+            <div class="rule info"><span class="mark">i</span><span>Gilt für alle Teammitglieder und ist verbindlich.</span></div>
+            <div class="rule info"><span class="mark">i</span><span>Das Team repräsentiert den Server nach außen.</span></div>
+            <div class="rule info"><span class="mark">i</span><span>Beitritt bedeutet automatische Akzeptanz der Regeln.</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="s-verhalten">
+        <summary>
+          <span class="num">2</span>
+          <span class="panel-title">Verhalten im Team</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Respekt</p>
+          <div class="rules">
+            <div class="rule ok"><span class="mark">✓</span><span>Respektvoller Umgang mit allen</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Kein Mobbing, keine Beleidigungen</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Streitigkeiten intern klären</span></div>
+          </div>
+          <p class="sub-h">Professionalität</p>
+          <div class="rules">
+            <div class="rule ok"><span class="mark">✓</span><span>Sachlich und neutral bleiben</span></div>
+            <div class="rule warn"><span class="mark">!</span><span>Verstöße durch Team unterliegen oft strengerer Wertung</span></div>
+          </div>
+        </div>
+      </details>
+
+      <details class="panel" id="s-schweigen">
+        <summary>
+          <span class="num">3</span>
+          <span class="panel-title">Verschwiegenheit</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Niemals weitergeben</p>
+          <div class="tags">
+            <span class="tag red">Teamgespräche</span>
+            <span class="tag red">Adminrechte</span>
+            <span class="tag red">Updates</span>
+            <span class="tag red">Reports</span>
             <span class="tag red">Spielerdaten</span>
             <span class="tag red">Teamentscheidungen</span>
           </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">3.2 Datenschutz</div>
-          <div class="rule-list">
-            <div class="rule-item no"><div class="icon">✗</div> Persönliche Daten von Spielern dürfen nicht weitergegeben werden.</div>
-            <div class="rule-item no"><div class="icon">✗</div> Screenshots oder Logs dürfen nicht ohne Erlaubnis veröffentlicht werden.</div>
+          <p class="sub-h">Datenschutz</p>
+          <div class="rules">
+            <div class="rule no"><span class="mark">✗</span><span>Keine Spielerdaten weitergeben</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Kein Veröffentlichen von Logs oder Screenshots</span></div>
           </div>
         </div>
-      </div>
+      </details>
+    </section>
     </div>
 
-    <!-- 4 PFLICHTEN -->
-    <div class="section" id="pflichten">
-      <div class="section-header">
-        <div class="section-num">4</div>
-        <div class="section-title">Rechte und Pflichten</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">4.1 Aktivitätspflicht</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Teammitglieder müssen regelmäßig aktiv sein.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Längere Abwesenheiten müssen der Teamleitung mitgeteilt werden.</div>
-            <div class="rule-item warn"><div class="icon">!</div> Inaktive Teammitglieder können aus dem Team entfernt werden.</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">4.2 Supportpflicht</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Supportanfragen sind ernst zu nehmen.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Jeder Supportfall wird fair geprüft.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Teammitglieder helfen Spielern freundlich und verständlich.</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">4.3 Neutralität</div>
-          <div class="rule-list">
-            <div class="rule-item no"><div class="icon">✗</div> Freunde oder eigene Fraktionen dürfen nicht bevorzugt werden.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Entscheidungen müssen objektiv getroffen werden.</div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div class="rules-col">
+    <section class="region" id="region-pflichten" aria-labelledby="h-pflichten">
+      <h2 id="h-pflichten">Pflichten und Rechte</h2>
 
-    <!-- 5 ADMIN -->
-    <div class="section" id="admin">
-      <div class="section-header">
-        <div class="section-num">5</div>
-        <div class="section-title">Nutzung von Adminrechten</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">5.1 Verboten</div>
-          <div class="rule-list">
-            <div class="rule-item no"><div class="icon">✗</div> Unnötiges Spawnen von Fahrzeugen oder Items</div>
-            <div class="rule-item no"><div class="icon">✗</div> Geld- oder Item-Missbrauch</div>
-            <div class="rule-item no"><div class="icon">✗</div> Teleportieren ohne Grund</div>
-            <div class="rule-item no"><div class="icon">✗</div> Unfaire Vorteile im RP</div>
-            <div class="rule-item no"><div class="icon">✗</div> Eingriffe in laufende RP-Situationen ohne Notwendigkeit</div>
+      <details class="panel" id="s-pflichten">
+        <summary>
+          <span class="num">4</span>
+          <span class="panel-title">Rechte und Pflichten</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Aktivität</p>
+          <div class="rules">
+            <div class="rule ok"><span class="mark">✓</span><span>Regelmäßig aktiv sein</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Abwesenheiten der Leitung melden</span></div>
+            <div class="rule warn"><span class="mark">!</span><span>Anhaltende Inaktivität kann zum Ausschluss führen</span></div>
+          </div>
+          <p class="sub-h">Neutralität</p>
+          <div class="rules">
+            <div class="rule no"><span class="mark">✗</span><span>Keine Bevorzugung von Freunden oder Fraktionen</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Objektive Entscheidungen treffen</span></div>
           </div>
         </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">5.2 Logging</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Jede wichtige Handlung muss nachvollziehbar sein.</div>
-            <div class="rule-item warn"><div class="icon">!</div> Missbrauch von Rechten führt zu Konsequenzen.</div>
-          </div>
-        </div>
-        <div class="info-box">💡 Admin und RP sind strikt zu trennen. Die Teamrolle darf niemals im Roleplay ausgenutzt werden.</div>
-      </div>
-    </div>
+      </details>
 
-    <!-- 6 SUPPORT -->
-    <div class="section" id="support">
-      <div class="section-header">
-        <div class="section-num">6</div>
-        <div class="section-title">Support-Regeln</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">6.1 Bearbeitung von Tickets</div>
-          <div class="rule-list">
-            <div class="rule-item ok"><div class="icon">✓</div> Tickets werden der Reihe nach bearbeitet.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Freundlichkeit und Geduld sind Pflicht.</div>
-            <div class="rule-item ok"><div class="icon">✓</div> Spieler werden angehört, bevor Entscheidungen getroffen werden.</div>
+      <details class="panel" id="s-admin">
+        <summary>
+          <span class="num">5</span>
+          <span class="panel-title">Adminrechte</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Verboten</p>
+          <div class="rules">
+            <div class="rule no"><span class="mark">✗</span><span>Unnötiges Spawnen von Items oder Fahrzeugen</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Geld- oder Item-Missbrauch</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Teleportieren ohne triftigen Grund</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Unfaire Vorteile im Roleplay</span></div>
+            <div class="rule no"><span class="mark">✗</span><span>Eingriffe in laufende RP-Situationen</span></div>
           </div>
+          <p class="note">Admin- und RP-Rolle strikt trennen: Die Teamrolle darf nie zum Vorteil im RP genutzt werden.</p>
         </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">6.2 Strafen müssen sein</div>
-          <div class="tag-row">
+      </details>
+    </section>
+
+    <section class="region" id="region-support" aria-labelledby="h-support">
+      <h2 id="h-support">Support und Struktur</h2>
+
+      <details class="panel" id="s-support">
+        <summary>
+          <span class="num">6</span>
+          <span class="panel-title">Support-Regeln</span>
+        </summary>
+        <div class="panel-body">
+          <div class="rules">
+            <div class="rule ok"><span class="mark">✓</span><span>Tickets der Reihe nach bearbeiten</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Freundlichkeit und Geduld sind Pflicht</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Spieler anhören, bevor entschieden wird</span></div>
+          </div>
+          <p class="sub-h">Strafen müssen sein</p>
+          <div class="tags">
             <span class="tag blue">Nachvollziehbar</span>
             <span class="tag blue">Fair</span>
             <span class="tag blue">Regelkonform</span>
             <span class="tag blue">Dokumentiert</span>
           </div>
-        </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">6.3 Fehlentscheidungen</div>
-          <div class="rule-list">
-            <div class="rule-item info"><div class="icon">ℹ</div> Fehler passieren – Fehlentscheidungen sollen offen angesprochen und korrigiert werden.</div>
+          <p class="sub-h">Discord</p>
+          <div class="rules">
+            <div class="rule no"><span class="mark">✗</span><span>Kein Spam, keine unnötigen Diskussionen</span></div>
+            <div class="rule ok"><span class="mark">✓</span><span>Professionelle Sprache im Supportbereich</span></div>
           </div>
         </div>
-      </div>
-    </div>
+      </details>
 
-    <!-- 7 TEAMSTRUKTUR -->
-    <div class="section" id="struktur">
-      <div class="section-header">
-        <div class="section-num">7</div>
-        <div class="section-title">Teamstruktur &amp; Rangordnung</div>
-      </div>
-      <div class="section-body">
-        <table class="rank-table">
-          <tr>
-            <td><span class="rank-badge rank-gold">Serverleitung</span></td>
-            <td class="rank-desc">Höchste Entscheidungsinstanz des Servers</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-blue">Projektleitung</span></td>
-            <td class="rank-desc">Projektverantwortung &amp; Teamkoordination</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-green">Head-Admin</span></td>
-            <td class="rank-desc">Leitung des Adminteams</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-green">Admin</span></td>
-            <td class="rank-desc">Vollständige Adminrechte</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-purple">Moderator</span></td>
-            <td class="rank-desc">Moderation &amp; Regeldurchsetzung</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-pink">Supporter</span></td>
-            <td class="rank-desc">Spielersupport &amp; Ticketbearbeitung</td>
-          </tr>
-          <tr>
-            <td><span class="rank-badge rank-gray">Test-Supporter</span></td>
-            <td class="rank-desc">Probezeit aktiv</td>
-          </tr>
-        </table>
-        <div class="info-box" style="margin-top: 1rem;">⬆️ Höhere Ränge dürfen Aufgaben verteilen und Anweisungen geben. Ihre Entscheidungen sind zu respektieren.</div>
-      </div>
-    </div>
-
-    <!-- 8 DISCORD -->
-    <div class="section" id="discord">
-      <div class="section-header">
-        <div class="section-num">8</div>
-        <div class="section-title">Discord- und Kommunikationsregeln</div>
-      </div>
-      <div class="section-body">
-        <div class="rule-list">
-          <div class="rule-item no"><div class="icon">✗</div> Kein Spam in Teamkanälen</div>
-          <div class="rule-item no"><div class="icon">✗</div> Keine unnötigen Diskussionen im Teamchat</div>
-          <div class="rule-item ok"><div class="icon">✓</div> Angemessene Sprache verwenden</div>
-          <div class="rule-item ok"><div class="icon">✓</div> Interne Channels bleiben intern</div>
-          <div class="rule-item ok"><div class="icon">✓</div> Im Supportbereich wird professionell gesprochen</div>
-          <div class="rule-item ok"><div class="icon">✓</div> Teamgespräche werden nicht gestört</div>
+      <details class="panel" id="s-struktur">
+        <summary>
+          <span class="num">7</span>
+          <span class="panel-title">Teamstruktur und Ränge</span>
+        </summary>
+        <div class="panel-body">
+          <div class="rank-grid">
+            <div class="rank-line"><span class="badge b-gold">Serverleitung</span><span>Höchste Entscheidungsinstanz</span></div>
+            <div class="rank-line"><span class="badge b-blue">Projektleitung</span><span>Projektverantwortung</span></div>
+            <div class="rank-line"><span class="badge b-green">Head-Admin</span><span>Leitung des Adminteams</span></div>
+            <div class="rank-line"><span class="badge b-green">Admin</span><span>Vollständige Rechte</span></div>
+            <div class="rank-line"><span class="badge b-purple">Moderator</span><span>Moderation und Regeln</span></div>
+            <div class="rank-line"><span class="badge b-pink">Supporter</span><span>Support und Tickets</span></div>
+            <div class="rank-line"><span class="badge b-gray">Test-Supporter</span><span>Probezeit aktiv</span></div>
+          </div>
+          <p class="note">Höhere Ränge dürfen Anweisungen erteilen. Diese sind respektvoll zu befolgen.</p>
         </div>
-      </div>
+      </details>
+    </section>
     </div>
 
-    <!-- 9 KONSEQUENZEN -->
-    <div class="section" id="regeln">
-      <div class="section-header">
-        <div class="section-num">9</div>
-        <div class="section-title">Konsequenzen bei Regelverstößen</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">9.1 Eskalationsstufen</div>
-          <div class="punish-list">
-            <div class="punish-row"><div class="punish-step">1</div><span class="punish-label">Verwarnung</span></div>
-            <div class="punish-row"><div class="punish-step">2</div><span class="punish-label">Teamgespräch</span></div>
-            <div class="punish-row"><div class="punish-step">3</div><span class="punish-label">Rechteentzug</span></div>
-            <div class="punish-row"><div class="punish-step">4</div><span class="punish-label">Degradierung</span></div>
-            <div class="punish-row severe"><div class="punish-step">5</div><span class="punish-label">Ausschluss aus dem Team</span></div>
-            <div class="punish-row severe"><div class="punish-step">6</div><span class="punish-label">Serverausschluss</span></div>
+    <div class="rules-col">
+    <section class="region" id="region-folgen" aria-labelledby="h-folgen">
+      <h2 id="h-folgen">Konsequenzen und Bewerbung</h2>
+
+      <details class="panel" id="s-regeln">
+        <summary>
+          <span class="num">8</span>
+          <span class="panel-title">Konsequenzen</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Eskalationsstufen</p>
+          <div class="steps">
+            <div class="step"><i>1</i><span>Verwarnung</span></div>
+            <div class="step"><i>2</i><span>Teamgespräch</span></div>
+            <div class="step"><i>3</i><span>Rechteentzug</span></div>
+            <div class="step"><i>4</i><span>Degradierung</span></div>
+            <div class="step bad"><i>5</i><span>Teamausschluss</span></div>
+            <div class="step bad"><i>6</i><span>Serverausschluss</span></div>
           </div>
         </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">9.2 Führt direkt zum Ausschluss</div>
-          <div class="tag-row">
+      </details>
+
+      <details class="panel" id="s-direkt">
+        <summary>
+          <span class="num">!</span>
+          <span class="panel-title">Direkter Ausschluss</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Sofortmaßnahme bei</p>
+          <div class="tags">
             <span class="tag red">Rechte-Missbrauch</span>
             <span class="tag red">Informationsleak</span>
             <span class="tag red">Cheating / Hacking</span>
             <span class="tag red">Korruption</span>
-            <span class="tag red">Community-Schädigung</span>
+            <span class="tag red">Community-Schaden</span>
             <span class="tag red">Massive Beleidigungen</span>
           </div>
+          <p class="note">Diese Verstöße führen in der Regel direkt zum Ausschluss, ohne die üblichen Vorstufen.</p>
         </div>
-      </div>
-    </div>
+      </details>
 
-    <!-- 10 BEWERBUNG -->
-    <div class="section" id="bewerbung">
-      <div class="section-header">
-        <div class="section-num">10</div>
-        <div class="section-title">Bewerbung &amp; Probezeit</div>
-      </div>
-      <div class="section-body">
-        <div class="subsection">
-          <div class="subsection-title">10.1 Bewerber sollten</div>
-          <div class="tag-row">
-            <span class="tag blue">Reife zeigen</span>
-            <span class="tag blue">Regelkenntnisse besitzen</span>
-            <span class="tag blue">Aktiv sein</span>
-            <span class="tag blue">Teamfähig sein</span>
-            <span class="tag blue">Stressresistent sein</span>
+      <details class="panel" id="s-bewerbung">
+        <summary>
+          <span class="num">9</span>
+          <span class="panel-title">Bewerbung und Probezeit</span>
+        </summary>
+        <div class="panel-body">
+          <p class="sub-h">Voraussetzungen</p>
+          <div class="tags">
+            <span class="tag green">Reife</span>
+            <span class="tag green">Regelkenntnisse</span>
+            <span class="tag green">Aktivität</span>
+            <span class="tag green">Teamfähigkeit</span>
+            <span class="tag green">Stressresistenz</span>
+          </div>
+          <p class="sub-h">In der Probezeit wird geprüft</p>
+          <div class="rules">
+            <div class="rule info"><span class="mark">→</span><span>Verhalten und Kommunikation</span></div>
+            <div class="rule info"><span class="mark">→</span><span>Aktivität und Zuverlässigkeit</span></div>
+            <div class="rule info"><span class="mark">→</span><span>Supportqualität</span></div>
+            <div class="rule info"><span class="mark">→</span><span>Teamfähigkeit</span></div>
           </div>
         </div>
-        <div class="divider"></div>
-        <div class="subsection">
-          <div class="subsection-title">10.2 Während der Probezeit wird geprüft</div>
-          <div class="rule-list">
-            <div class="rule-item info"><div class="icon">→</div> Verhalten gegenüber Spielern und Team</div>
-            <div class="rule-item info"><div class="icon">→</div> Aktivität und Zuverlässigkeit</div>
-            <div class="rule-item info"><div class="icon">→</div> Qualität der Supportbearbeitung</div>
-            <div class="rule-item info"><div class="icon">→</div> Teamfähigkeit und Kommunikation</div>
+      </details>
+    </section>
+
+    <section class="region" id="region-rp" aria-labelledby="h-rp">
+      <h2 id="h-rp">Roleplay</h2>
+
+      <details class="panel" id="s-rp">
+        <summary>
+          <span class="num">10</span>
+          <span class="panel-title">Roleplay-Bezug</span>
+        </summary>
+        <div class="panel-body">
+          <div class="rp-grid">
+            <div class="rp-card"><strong>✗ Verboten</strong> Keine Sonderbehandlung für Teammitglieder im RP.</div>
+            <div class="rp-card"><strong>✗ Meta</strong> Admin-Informationen dürfen nicht ins RP einfließen (Meta-Gaming).</div>
+            <div class="rp-card"><strong>✗ Gleichheit</strong> Alle RP-Regeln gelten auch für Teammitglieder uneingeschränkt.</div>
           </div>
         </div>
-      </div>
+      </details>
+    </section>
+    </div>
     </div>
 
-    <!-- 11 RP -->
-    <div class="section" id="rp">
-      <div class="section-header">
-        <div class="section-num">11</div>
-        <div class="section-title">Roleplay-Bezug</div>
-      </div>
-      <div class="section-body">
-        <div class="rule-list">
-          <div class="rule-item no"><div class="icon">✗</div> Teammitglieder dürfen keine Sonderbehandlung im RP erhalten.</div>
-          <div class="rule-item no"><div class="icon">✗</div> Informationen aus dem Adminbereich dürfen nicht ins RP übernommen werden (Meta-Gaming).</div>
-          <div class="rule-item no"><div class="icon">✗</div> Auch Teammitglieder müssen sämtliche RP-Regeln einhalten – kein Power-RP.</div>
-        </div>
-      </div>
-    </div>
-
+    <footer>
+      <p><strong>Das Team bildet das Fundament des Servers.</strong><br>
+      Ein respektvoller, professioneller und fairer Umgang stützt eine starke Community.<br>
+      Mit dem Eintritt ins Team bestätigt jedes Mitglied, dieses Regelwerk gelesen und akzeptiert zu haben.</p>
+    </footer>
   </main>
 </div>
-
-<footer>
-  <p><strong>Das Team bildet das Fundament des Servers.</strong><br>
-  Ein respektvoller, professioneller und fairer Umgang sorgt für eine starke Community und langfristigen Erfolg.<br><br>
-  Mit dem Eintritt ins Team bestätigt jedes Mitglied, dieses Regelwerk gelesen und akzeptiert zu haben.</p>
-</footer>
+</div>
 
 <script>
-  const sections = document.querySelectorAll('.section');
-  const links = document.querySelectorAll('.sidebar nav a');
-  const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        links.forEach(l => l.classList.remove('active'));
-        const id = e.target.id;
-        const link = document.querySelector(`.sidebar nav a[href="#${id}"]`);
-        if (link) link.classList.add('active');
-      }
+(function () {
+  function openDetails(id) {
+    if (!id) return;
+    var el = document.getElementById(id);
+    if (!el || el.tagName.toLowerCase() !== "details") return;
+    el.open = true;
+  }
+
+  function handleHash() {
+    var h = window.location.hash;
+    var id = h && h.charAt(0) === "#" ? h.slice(1) : h;
+    if (!id || id === "top") return;
+    openDetails(id);
+  }
+
+  function collapseAllPanels() {
+    document.querySelectorAll("main details.panel").forEach(function (d) {
+      d.open = false;
     });
-  }, { threshold: 0.3 });
-  sections.forEach(s => obs.observe(s));
+  }
+
+  window.addEventListener("hashchange", function () {
+    collapseAllPanels();
+    handleHash();
+  });
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a) return;
+    var href = a.getAttribute("href");
+    if (!href || href === "#") return;
+    var id = href.slice(1);
+    if (id === "top") {
+      queueMicrotask(function () {
+        collapseAllPanels();
+      });
+      return;
+    }
+    queueMicrotask(function () {
+      collapseAllPanels();
+      openDetails(id);
+    });
+  });
+
+  function boot() {
+    collapseAllPanels();
+    handleHash();
+  }
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
 </script>
+
 </body>
 </html>
